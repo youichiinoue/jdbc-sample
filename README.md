@@ -76,3 +76,20 @@ mvn exec:java
 Hello World!2
 ```
 
+### #efc171d2 "add spring batch"
+
+springBatchを使ったバッチ処理に変更
+
+```terminal
+mvn package
+mvn exe:java
+12 16, 2016 4:33:18 午前 org.springframework.context.support.ClassPathXmlApplicationContext prepareRefresh
+情報: Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@a384a51: startup date [Fri Dec 16 04    :33:
+18 GMT 2016]; root of context hierarchy
+12 16, 2016 4:33:18 午前 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+(省略)
+Hello!!!!
+abc2
+(省略)
+```
+
