@@ -9,6 +9,7 @@
   <url>http://maven.apache.org</url>
   <properties>
     <spring.version>4.3.4.RELEASE</spring.version>
+    <spring.batch.version>3.0.7.RELEASE</spring.batch.version>
     <java.version>1.7</java.version>
   </properties>
   <dependencies>
@@ -21,6 +22,16 @@
       <groupId>org.springframework</groupId>
       <artifactId>spring-jdbc</artifactId>
       <version>${spring.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.batch</groupId>
+      <artifactId>spring-batch-core</artifactId>
+      <version>${spring.batch.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-dbcp</groupId>
+      <artifactId>commons-dbcp</artifactId>
+      <version>1.2.2</version>
     </dependency>
     <dependency>
       <groupId>com.h2database</groupId>
@@ -46,33 +57,41 @@
         </configuration>
       </plugin>
       <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <version>3.0.0</version>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>1.7.1</version>
         <executions>
           <execution>
-            <id>make-assembly</id>
             <phase>package</phase>
             <goals>
-              <goal>single</goal>
+              <goal>shade</goal>
             </goals>
           </execution>
         </executions>
         <configuration>
-          <descriptorRefs>
-            <descriptorRef>jar-with-dependencies</descriptorRef>
-          </descriptorRefs>
-          <archive>
-            <manifest>
-              <mainClass>com.sample.App</mainClass>
-            </manifest>
-          </archive>
+          <transformers>
+            <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+              <mainClass>org.springframework.batch.core.launch.support.CommandLineJobRunner</mainClass>
+            </transformer>
+            <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+              <resource>handlers</resource>
+            </transformer>
+            <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+              <resource>schemas</resource>
+            </transformer>
+          </transformers>
+          <shadedArtifactAttached>true</shadedArtifactAttached>
+          <shadedClassfierName>shaded</shadedClassfierName>
         </configuration>
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
         <configuration>
-          <mainClass>com.sample.App</mainClass>
+          <mainClass>org.springframework.batch.core.launch.support.CommandLineJobRunner</mainClass>
+          <arguments>
+            <argument>applicationContext.xml</argument>
+            <argument>todoSpringBatchJob</argument>
+          </arguments>
         </configuration>
       </plugin>
     </plugins>
